@@ -43,3 +43,7 @@ for link in Links:
     except:
         print("The following links where rejected or produced an error, even though we changed the user agent to allow downloading.")
         print(link)
+print("All links have been processed.")
+        
+open("Links.txt" , "w").close()
+print("Links file has been emptied")
