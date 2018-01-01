@@ -20,7 +20,7 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.0.9"
+__version__ = "0.0.8"
 
 import time, pathlib, sys, re, os, urllib.request
 cwd = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +40,6 @@ urllib.request.install_opener(opener)
 Limit = 0
 
 for link in Links:
-    Limit += 1
     link = link.replace("\n","")
     filename = os.path.basename(link).split("?")[0]
     filename = os.path.dirname(sys.executable) + "/" + filename
@@ -59,6 +58,7 @@ for link in Links:
                 fileUpdate.truncate()
             pass
         else:
+            Limit += 1
             urllib.request.urlretrieve(link,filename)
             with open(sourceFile, "r+") as fileUpdate:
                 OldFile = fileUpdate.readlines()
