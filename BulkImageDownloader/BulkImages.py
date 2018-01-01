@@ -20,7 +20,7 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.0.8"
+__version__ = "0.0.9"
 
 import time, pathlib, sys, re, os, urllib.request
 cwd = os.path.dirname(os.path.abspath(__file__))
@@ -75,6 +75,6 @@ for link in Links:
 with open("last.run", "w") as last:
     lastRun = time.localtime()
     timeString = time.strftime("%Y-%m-%d %H:%M:%S", lastRun)
-    last.write("Last run was: " + timeString)
-    last.write("Process took: " + str(time.time() - startTime) + "seconds.")
+    last.write("Last run was: " + timeString + "\n")
+    last.write("Process took: " + str(time.time() - startTime) + " seconds.")
 print("All links have been processed.")
