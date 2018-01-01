@@ -20,13 +20,21 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 import time, pathlib, sys, re, os, urllib.request
 cwd = os.path.dirname(os.path.abspath(__file__))
 sourceFile = os.path.dirname(sys.executable) + "\Links.txt"
 
 startTime = time.time()
+
+def LimitEnd():
+    with open("last.run", "w") as last:
+        lastRun = time.localtime()
+        timeString = time.strftime("%Y-%m-%d %H:%M:%S", lastRun)
+        last.write("Last run was: " + timeString + "\n")
+        last.write("Process took: " + str(time.time() - startTime) + " seconds.")
+        sys.exit()
 
 with open(sourceFile,"r") as src:
     src.seek(0)
@@ -45,7 +53,7 @@ for link in Links:
     filename = os.path.dirname(sys.executable) + "/" + filename
     fileExists = pathlib.Path(filename)
     if Limit == 1000:
-        sys.exit()
+        LimitEnd()
     try:
         if fileExists.is_file():
             print("File exists, skipping file, downloading next...")
@@ -72,9 +80,7 @@ for link in Links:
         print(link)
         with open("Error_Links.txt", "a") as errFile:
             errFile.write(str(link)+"\n")
-with open("last.run", "w") as last:
-    lastRun = time.localtime()
-    timeString = time.strftime("%Y-%m-%d %H:%M:%S", lastRun)
-    last.write("Last run was: " + timeString + "\n")
-    last.write("Process took: " + str(time.time() - startTime) + " seconds.")
+
+LimitEnd()
+
 print("All links have been processed.")
