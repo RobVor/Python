@@ -13,14 +13,11 @@ FOR A PARTICULAR PURPOSE.
 """
 
 __author__ = "Robert Vorster"
-#__authors__ = ["One developer", "And another one", "etc"]
 __contact__ = "rob.vor@gmail.com"
 __copyright__ = "Copyright 2017 - 2018, ROBERT VORSTER ALL RIGHTS RESERVED"
-#__credits__ = ["One developer", "And another one", "etc"]
 __date__ = "2017/12/31"
 __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
-#__license__ = "GPLv3"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
 __version__ = "0.0.5"
