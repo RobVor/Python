@@ -20,9 +20,9 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.0.6"
+__version__ = "0.0.8"
 
-import pathlib, sys, re, os, urllib.request
+import time, pathlib, sys, re, os, urllib.request
 cwd = os.path.dirname(os.path.abspath(__file__))
 sourceFile = os.path.dirname(sys.executable) + "\Links.txt"
 
@@ -70,4 +70,8 @@ for link in Links:
         print(link)
         with open("Error_Links.txt", "a") as errFile:
             errFile.write(str(link)+"\n")
+with open("last.run", "w") as last:
+    lastRun = time.localtime()
+    timeString = time.strftime("%Y-%m-%d %H:%M:%S", lastRun)
+    last.write("Last run was: " + timeString)
 print("All links have been processed.")
