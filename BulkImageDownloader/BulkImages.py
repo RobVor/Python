@@ -20,13 +20,19 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import time, pathlib, sys, re, os, urllib.request
 cwd = os.path.dirname(os.path.abspath(__file__))
 sourceFile = os.path.dirname(sys.executable) + "\Links.txt"
 
 startTime = time.time()
+beanCounter = 0
+if len(sys.argv) > 1:
+    Limit = int(sys.argv[1])
+    print("Script will stop at " + str(Limit) + " files/links downloaded")
+else:
+    Limit = 999999
 
 def LimitEnd():
     with open("last.run", "w") as last:
@@ -45,14 +51,12 @@ opener=urllib.request.build_opener()
 opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
 urllib.request.install_opener(opener)
 
-Limit = 0
-
 for link in Links:
     link = link.replace("\n","")
     filename = os.path.basename(link).split("?")[0]
     filename = os.path.dirname(sys.executable) + "/" + filename
     fileExists = pathlib.Path(filename)
-    if Limit == 1000:
+    if beanCounter == Limit:
         LimitEnd()
     try:
         if fileExists.is_file():
@@ -66,7 +70,7 @@ for link in Links:
                 fileUpdate.truncate()
             pass
         else:
-            Limit += 1
+            beanCounter += 1
             urllib.request.urlretrieve(link,filename)
             with open(sourceFile, "r+") as fileUpdate:
                 OldFile = fileUpdate.readlines()
