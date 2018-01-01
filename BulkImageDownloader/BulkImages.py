@@ -13,16 +13,19 @@ FOR A PARTICULAR PURPOSE.
 """
 
 __author__ = "Robert Vorster"
+#__authors__ = ["One developer", "And another one", "etc"]
 __contact__ = "rob.vor@gmail.com"
 __copyright__ = "Copyright 2017 - 2018, ROBERT VORSTER ALL RIGHTS RESERVED"
+#__credits__ = ["One developer", "And another one", "etc"]
 __date__ = "2017/12/31"
 __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
+#__license__ = "GPLv3"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 
-import sys, re, os, urllib.request
+import pathlib, sys, re, os, urllib.request
 cwd = os.path.dirname(os.path.abspath(__file__))
 sourceFile = os.path.dirname(sys.executable) + "\Links.txt"
 
@@ -39,9 +42,12 @@ for link in Links:
     link = link.replace("\n","")
     filename = os.path.basename(link).split("?")[0]
     filename = os.path.dirname(sys.executable) + "/" + filename
-    print(filename)
+    fileExists = pathlib.Path(filename)
     try:
-        urllib.request.urlretrieve(link,filename)
+        if fileExists.is_file():
+            print("File exists, skipping file, downloading next...")
+        else:
+            urllib.request.urlretrieve(link,filename)
     except:
         print("The following links where rejected or produced an error, even though we changed the user agent to allow downloading.")
         print(link)
