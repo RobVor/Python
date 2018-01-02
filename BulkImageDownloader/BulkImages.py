@@ -20,7 +20,7 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 import time, pathlib, sys, re, os, urllib.request
 cwd = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +40,7 @@ def LimitEnd():
         timeString = time.strftime("%Y-%m-%d %H:%M:%S", lastRun)
         last.write("Last run was: " + timeString + "\n")
         last.write("Process took: " + str(time.time() - startTime) + " seconds.")
-        sys.exit()
+    sys.exit()
 
 with open(sourceFile,"r") as src:
     src.seek(0)
