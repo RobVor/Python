@@ -20,7 +20,7 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 import time, pathlib, sys, re, os, urllib.request
 cwd = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +44,7 @@ def LimitEnd():
 
 with open(sourceFile,"r") as src:
     src.seek(0)
-    Links = src.readlines()
+    Links = set(src.readlines())
 print("We have found {} links to process...".format(len(Links)))
 
 opener=urllib.request.build_opener()
