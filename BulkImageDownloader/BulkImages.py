@@ -1,12 +1,10 @@
 #!python
 # -*- coding: utf-8 -*-
 """ This program was created to quickly download bulk images from URL links. The URL links are placed in a file called "Links.txt" and the program should then be executed.
-
 Copyright 2017 - 2018, ROBERT VORSTER ALL RIGHTS RESERVED
 Unauthorized copying of this file, via any medium is strictly prohibited
 Proprietary and confidential
 Written by Robert Vorster <rob.vor@gmail.com>, December 2017
-
 This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.
@@ -20,19 +18,39 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 import time, pathlib, sys, re, os, urllib.request
-cwd = os.path.dirname(os.path.abspath(__file__))
-sourceFile = os.path.dirname(sys.executable) + "\Links.txt"
 
 startTime = time.time()
 beanCounter = 0
-if len(sys.argv) > 1:
-    Limit = int(sys.argv[1])
-    print("Script will stop at " + str(Limit) + " files/links downloaded")
-else:
+sourceFile = str()
+
+try:
+    if "-f" in sys.argv:
+        isCalled = int(sys.argv.index("-f") + 1)
+        sourceFile = str(sys.argv[isCalled])
+        print("Source file for this run is '{}'.".format(sourceFile))
+    else:
+        sourceFile = "Links.txt"
+except:
+    print("No source file has been provided. Defaulting to 'Links.txt'")
+    sourceFile = "Links.txt"
+
+try:
+    if "-l" in sys.argv:
+        isCalled = int(sys.argv.index("-l") + 1)
+        Limit = int(sys.argv[isCalled])
+        print("Script will stop at " + str(Limit) + " files/links downloaded")
+    else:
+        Limit = 999999
+except:
+    print("No download file limit has been set. Defaulting to 10 files")
     Limit = 999999
+    print("Script will stop at " + str(Limit) + " files/links downloaded")
+    
+cwd = os.path.dirname(os.path.abspath(__file__))
+sourceFile = os.path.dirname(sys.executable) + "\\" + sourceFile
 
 def LimitEnd():
     with open("last.run", "w") as last:
@@ -42,10 +60,15 @@ def LimitEnd():
         last.write("Process took: " + str(time.time() - startTime) + " seconds.")
     sys.exit()
 
-with open(sourceFile,"r") as src:
-    src.seek(0)
-    Links = set(src.readlines())
-print("We have found {} links to process...".format(len(Links)))
+try:
+    with open(sourceFile,"r") as src:
+        src.seek(0)
+        Links = set(src.readlines())
+        print("We have found {} links to process...".format(len(Links)))
+except:
+    print("No source file found or the file is missing\corrupt, exiting application.")
+    time.sleep(3)
+    sys.exit()
 
 opener=urllib.request.build_opener()
 opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
@@ -62,7 +85,7 @@ for link in Links:
         if fileExists.is_file():
             print("File exists, skipping file, downloading next...")
             with open(sourceFile, "r+") as fileUpdate:
-                OldFile = fileUpdate.readlines()
+                OldFile = set(fileUpdate.readlines())
                 fileUpdate.seek(0)
                 for item in OldFile:
                     if item != str(link)+"\n":
@@ -73,7 +96,7 @@ for link in Links:
             beanCounter += 1
             urllib.request.urlretrieve(link,filename)
             with open(sourceFile, "r+") as fileUpdate:
-                OldFile = fileUpdate.readlines()
+                OldFile = set(fileUpdate.readlines())
                 fileUpdate.seek(0)
                 for item in OldFile:
                     if item != str(link)+"\n":
