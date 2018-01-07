@@ -12,13 +12,13 @@ FOR A PARTICULAR PURPOSE.
 
 __author__ = "Robert Vorster"
 __contact__ = "rob.vor@gmail.com"
-__copyright__ = "Copyright 2017 - 2018, ROBERT VORSTER ALL RIGHTS RESERVED"
+__copyright__ = "Copyright 2018 - 2019, ROBERT VORSTER ALL RIGHTS RESERVED"
 __date__ = "2017/12/31"
 __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
 import time, pathlib, sys, re, os, urllib.request
 
@@ -46,7 +46,7 @@ try:
         Limit = 999999
 except:
     print("No download file limit has been set. Defaulting to 10 files")
-    Limit = 999999
+    Limit = 10
     print("Script will stop at " + str(Limit) + " files/links downloaded")
     
 cwd = os.path.dirname(os.path.abspath(__file__))
@@ -75,38 +75,77 @@ opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKi
 urllib.request.install_opener(opener)
 
 for link in Links:
-    link = link.replace("\n","")
-    filename = os.path.basename(link).split("?")[0]
-    filename = os.path.dirname(sys.executable) + "/" + filename
-    fileExists = pathlib.Path(filename)
-    if beanCounter == Limit:
-        LimitEnd()
-    try:
-        if fileExists.is_file():
-            print("File exists, skipping file, downloading next...")
-            with open(sourceFile, "r+") as fileUpdate:
-                OldFile = set(fileUpdate.readlines())
-                fileUpdate.seek(0)
-                for item in OldFile:
-                    if item != str(link)+"\n":
-                        fileUpdate.write(item)
-                fileUpdate.truncate()
+    if ";" in link:
+        link = link.replace("\n","")
+        try:
+            os.mkdir(link.split(";")[1].replace('"','').replace("'",""))
+        except:
             pass
-        else:
-            beanCounter += 1
-            urllib.request.urlretrieve(link,filename)
-            with open(sourceFile, "r+") as fileUpdate:
-                OldFile = set(fileUpdate.readlines())
-                fileUpdate.seek(0)
-                for item in OldFile:
-                    if item != str(link)+"\n":
-                        fileUpdate.write(item)
-                fileUpdate.truncate()
-    except:
-        print("The following links where rejected or produced an error, even though we changed the user agent to allow downloading.")
-        print(link)
-        with open("Error_Links.txt", "a") as errFile:
-            errFile.write(str(link)+"\n")
+        subDir = link.split(";")[1].replace('"','').replace("'","")
+        filename = os.path.basename(link.split(";")[0]).split("?")[0]
+        filename = os.path.dirname(sys.executable) + "/" + subDir + "/" + filename
+        fileExists = pathlib.Path(filename)
+        if beanCounter == Limit:
+            LimitEnd()
+        try:
+            if fileExists.is_file():
+                print("File exists, skipping file, downloading next...")
+                with open(sourceFile, "r+") as fileUpdate:
+                    OldFile = set(fileUpdate.readlines())
+                    fileUpdate.seek(0)
+                    for item in OldFile:
+                        if item != str(link)+"\n":
+                            fileUpdate.write(item)
+                    fileUpdate.truncate()
+                pass
+            else:
+                beanCounter += 1
+                urllib.request.urlretrieve(link.split(";")[0].replace('"',''),filename)
+                with open(sourceFile, "r+") as fileUpdate:
+                    OldFile = set(fileUpdate.readlines())
+                    fileUpdate.seek(0)
+                    for item in OldFile:
+                        if item != str(link)+"\n":
+                            fileUpdate.write(item)
+                    fileUpdate.truncate()
+        except:
+            print("The following links where rejected or produced an error, even though we changed the user agent to allow downloading.")
+            print(link)
+            with open("Error_Links.txt", "a") as errFile:
+                errFile.write(str(link.split(";")[0].replace('"',''))+"\n")
+    else:
+        link = link.replace("\n","")
+        filename = os.path.basename(link).split("?")[0]
+        filename = os.path.dirname(sys.executable) + "/" + filename
+        fileExists = pathlib.Path(filename)
+        if beanCounter == Limit:
+            LimitEnd()
+        try:
+            if fileExists.is_file():
+                print("File exists, skipping file, downloading next...")
+                with open(sourceFile, "r+") as fileUpdate:
+                    OldFile = set(fileUpdate.readlines())
+                    fileUpdate.seek(0)
+                    for item in OldFile:
+                        if item != str(link)+"\n":
+                            fileUpdate.write(item)
+                    fileUpdate.truncate()
+                pass
+            else:
+                beanCounter += 1
+                urllib.request.urlretrieve(link,filename)
+                with open(sourceFile, "r+") as fileUpdate:
+                    OldFile = set(fileUpdate.readlines())
+                    fileUpdate.seek(0)
+                    for item in OldFile:
+                        if item != str(link)+"\n":
+                            fileUpdate.write(item)
+                    fileUpdate.truncate()
+        except:
+            print("The following links where rejected or produced an error, even though we changed the user agent to allow downloading.")
+            print(link)
+            with open("Error_Links.txt", "a") as errFile:
+                errFile.write(str(link)+"\n")
 
 LimitEnd()
 
