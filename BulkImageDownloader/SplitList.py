@@ -26,7 +26,7 @@ __version__ = "0.1.0"
 fileCount = 8
 with open("Links.csv", "r") as fileFeed:
     fileFeed.seek(0)
-    content = fileFeed.readlines()
+    content = set(fileFeed.readlines())
     
 if len(content) > 8:
     records = int(len(content) / 8) + 1
