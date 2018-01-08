@@ -18,7 +18,7 @@ __deprecated__ = False
 __email__ =  "rob.vor@gmail.com"
 __maintainer__ = "Robert Vorster"
 __status__ = "Production"
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 import time, pathlib, sys, re, os, urllib.request
 
@@ -50,7 +50,7 @@ except:
     print("Script will stop at " + str(Limit) + " files/links downloaded")
     
 cwd = os.path.dirname(os.path.abspath(__file__))
-sourceFile = os.path.dirname(sys.executable) + "\\" + sourceFile
+sourceFile = os.path.dirname(sys.executable) + "//" + sourceFile
 
 def LimitEnd():
     with open("last.run", "w") as last:
